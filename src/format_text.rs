@@ -9,6 +9,7 @@ use crate::swc::ensure_no_specific_syntax_errors;
 
 use super::configuration::Configuration;
 use super::generation::generate;
+use super::generation::generate_expression;
 use super::swc::parse_swc_ast;
 
 /// Formats a file.
@@ -55,6 +56,12 @@ pub fn format_parsed_source(source: &ParsedSource, config: &Configuration) -> Re
     ensure_no_specific_syntax_errors(source)?;
     inner_format(source, config)
   }
+}
+
+pub fn generate_expression_from_text(file_path: &Path, file_text: &str, config: &Configuration) -> Result<PrintItems> {
+  let parsed_source = parse_swc_ast(file_path, file_text)?;
+
+  Ok(generate_expression(&parsed_source, config))
 }
 
 fn inner_format(parsed_source: &ParsedSource, config: &Configuration) -> Result<Option<String>> {

@@ -18,6 +18,7 @@ mod utils;
 
 pub use format_text::format_parsed_source;
 pub use format_text::format_text;
+pub use format_text::generate_expression_from_text;
 
 #[cfg(feature = "tracing")]
 pub use format_text::trace_file;

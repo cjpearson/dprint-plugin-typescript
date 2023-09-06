@@ -46,6 +46,28 @@ pub fn generate(parsed_source: &ParsedSource, config: &Configuration) -> PrintIt
   })
 }
 
+fn generate_expression_helper<'a>(node: Node<'a>, context: &mut Context<'a>) -> PrintItems {
+  match node {
+    Node::ParenExpr(p) => gen_node(p.expr.into(), context),
+    _ => {
+      let mut items = PrintItems::new();
+      for n in node.children() {
+        items.extend(generate_expression_helper(n, context))
+      }
+      items
+    }
+  }
+}
+
+pub fn generate_expression(parsed_source: &ParsedSource, config: &Configuration) -> PrintItems {
+  parsed_source.with_view(|program| {
+    let program_node = program.into();
+    let mut context = Context::new(parsed_source.media_type(), parsed_source.tokens(), program_node, program, config);
+
+    generate_expression_helper(program_node, &mut context)
+  })
+}
+
 fn gen_node<'a>(node: Node<'a>, context: &mut Context<'a>) -> PrintItems {
   gen_node_with_inner_gen(node, context, |items, _| items)
 }

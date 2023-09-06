@@ -13,3 +13,4 @@ use generate_types::*;
 use tokens::*;
 
 pub use generate::generate;
+pub use generate::generate_expression;
