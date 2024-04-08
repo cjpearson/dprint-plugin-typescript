@@ -2360,8 +2360,17 @@ fn gen_conditional_expr<'a>(node: &CondExpr<'a>, context: &mut Context<'a>) -> P
       items.extend(question_comment_items.leading_line);
       if question_position == OperatorPosition::NextLine {
         items.push_sc(sc!("? "));
+
+        if context.config.indent_width == 2 {
+          items.push_signal(Signal::QueueStartIndent);
+          items.extend(gen_node(node.cons.into(), context));
+          items.push_signal(Signal::FinishIndent);
+        } else {
+          items.extend(gen_node(node.cons.into(), context));
+        }
+      } else {
+        items.extend(gen_node(node.cons.into(), context));
       }
-      items.extend(gen_node(node.cons.into(), context));
       if colon_position == OperatorPosition::SameLine {
         items.push_sc(sc!(" :"));
       }
@@ -2389,7 +2398,13 @@ fn gen_conditional_expr<'a>(node: &CondExpr<'a>, context: &mut Context<'a>) -> P
         items.push_sc(sc!(": "));
       }
       items.push_info(before_alternate_ln);
-      items.extend(gen_node(node.alt.into(), context));
+      if context.config.indent_width == 2 {
+        items.push_signal(Signal::QueueStartIndent);
+        items.extend(gen_node(node.alt.into(), context));
+        items.push_signal(Signal::FinishIndent);
+      } else {
+        items.extend(gen_node(node.alt.into(), context));
+      }
       indent_if_sol_and_same_indent_as_top_most(ir_helpers::new_line_group(items), top_most_il)
     });
     items.push_info(end_ln);

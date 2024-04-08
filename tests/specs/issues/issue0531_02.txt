@@ -1,0 +1,35 @@
+-- file.js --
+~~ lineWidth: 40, indentWidth: 4 ~~
+== should properly indent function arguments in a conditional expression ==
+true
+    ? test({ prop: 'some value', otherProp: 'some value' })
+    : test({ prop: 'some value', otherProp: 'some value' })
+
+[expect]
+true
+    ? test({
+        prop: "some value",
+        otherProp: "some value",
+    })
+    : test({
+        prop: "some value",
+        otherProp: "some value",
+    });
+
+== should properly indent array items in a conditional expression ==
+true ? ["apples", "bananas", "oranges", "watermelons"] : ["apples", "bananas", "oranges", "watermelons"]
+
+[expect]
+true
+    ? [
+        "apples",
+        "bananas",
+        "oranges",
+        "watermelons",
+    ]
+    : [
+        "apples",
+        "bananas",
+        "oranges",
+        "watermelons",
+    ];
